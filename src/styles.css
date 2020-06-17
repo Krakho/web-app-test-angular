@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    font-family: "Noto Sans KR", Helvetica, sans-serif;
+    
+}
+
+.custom2 {
+    color: #FF5B3A;
+    font-weight: 900;
+    font-size: 50px;
+}
+

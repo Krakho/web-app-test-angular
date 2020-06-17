@@ -1,0 +1,54 @@
+<section class="d-flex flex-column align-items-center mt-2">
+
+    <form [formGroup]="searchForm">
+        <label>
+           <input type="text" (keyup)="searchTerm.next($event)" formControlName="search" placeholder="Cerca un libro..." />
+           <div *ngIf="loading">
+                <p class="search-message">Ricerca in corso...</p>
+                <div class="lds-ellipsis"></div>
+           </div>
+        </label>    
+    </form>
+
+    
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         Libri per pagina: {{selectedPageNumber}}
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#" (click)="selectPaginationNumber(5)">5</a>
+          <a class="dropdown-item" href="#" (click)="selectPaginationNumber(10)">10</a>
+          <a class="dropdown-item" href="#" (click)="selectPaginationNumber(15)">15</a>
+          <a class="dropdown-item" href="#" (click)="selectPaginationNumber(20)">20</a>
+        </div>
+    </div>
+
+    <pagination-controls class="align-self-start"(pageChange)="page = $event" *ngIf="searchResults"> 
+    </pagination-controls>
+
+
+    <div class="container-fluid d-flex flex-row flex-wrap justify-center" *ngIf="searchResults">
+        <div class="book d-flex flex-row w-100 m-4 shadow-lg custom" *ngFor="let result of paginationElements | paginate: { itemsPerPage: selectedPageNumber, currentPage: page }">
+                <img *ngIf="result.volumeInfo.imageLinks.thumbnail" loading="lazy" [attr.src]="result.volumeInfo.imageLinks.thumbnail"
+                    width="150"
+                    height="auto"
+                    alt="bookImage"
+                />
+                <div class="d-flex flex-column justify-content-around ml-4 p-4">
+                    <h2><a [href]="result.volumeInfo.infoLink">{{result.volumeInfo.title}}</a></h2>
+                    <p *ngIf="result.volumeInfo.subtitle">{{result.volumeInfo.subtitle}}</p>
+                    <p *ngIf="result.volumeInfo.description"><em>Descrizione </em>: {{(result.volumeInfo.description.length>300?(result.volumeInfo.description | slice:0:300 )+"...":result.volumeInfo.description)}}</p>
+                    <p *ngIf="result.volumeInfo.authors"><em>Scritto da </em>: <i *ngFor="let author of result.volumeInfo.authors">{{author}}</i></p> 
+                </div>
+        </div>
+    </div>
+
+    <pagination-controls class="align-self-start" (pageChange)="page = $event" *ngIf="searchResults">
+    </pagination-controls>
+   
+    <div *ngIf="errorMessage" class="errorMessage">
+        <h2>Error</h2>
+        <p class="error">{{errorMessage}}</p>
+    </div>
+
+</section>
